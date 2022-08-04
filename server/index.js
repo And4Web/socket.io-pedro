@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const {Server} = require('socket.io');
+const PORT = 5000;
 
 const app = express();
 
@@ -16,6 +17,13 @@ const io = new Server(server, {
   },
 });
 
-server.listen(5000, ()=>{
-  console.log("Listening at port: 5000")
+io.on("connection", (socket)=>{
+  // console.log(`Connected User: ${socket.id}`)  
+  socket.on("send", (data)=>{
+    socket.broadcast.emit("received", data)
+  })
+})
+
+server.listen(PORT, ()=>{
+  console.log(`Listening at port: ${PORT}`)
 })
